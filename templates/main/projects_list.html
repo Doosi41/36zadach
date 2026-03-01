@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/projects_list.css' %}">
+
+<div class="container">
+    
+    <div class="projects-header">
+        <h1>Мои расчеты</h1>
+        <a href="{% url 'calculate' %}" class="btn-open" style="padding: 10px 20px;">+ Новый проект</a>
+    </div>
+
+    <div class="projects-grid">
+        {% for prj in projects %}
+            <div class="project-card">
+                <div class="card-header">
+                    <h3>{{ prj.title }}</h3>
+                    <span class="status-badge {{ prj.status }}">
+                        {{ prj.get_status_display }}
+                    </span>
+                </div>
+                
+                <div class="card-info">
+                    <p><span>Дата:</span> <strong>{{ prj.created_at|date:"d.m.Y" }}</strong></p>
+                    <p><span>Вес:</span> <strong>{{ prj.total_weight|floatformat:1 }} г</strong></p>
+                    <p><span>Цена:</span> <strong>{{ prj.total_price }} руб</strong></p>
+                </div>
+
+                <a href="{% url 'calculate_with_id' prj.id %}" class="btn-open">Открыть расчет</a>
+            </div>
+
+        {% empty %}
+            <div style="color: #aaa; text-align: center; grid-column: 1/-1; padding: 50px;">
+                <p>Список пуст. Создайте свой первый проект в калькуляторе.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

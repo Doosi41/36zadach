@@ -1,0 +1,193 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --primary: #38bdf8;
+    --primary-hover: #0ea5e9;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --accent: #8b5cf6;
+    --nav-height: 70px; /* Добавил высоту, чтобы navbar работал корректно */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* --- ОБНОВЛЕННАЯ ШАПКА --- */
+.navbar {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    height: var(--nav-height);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    margin-bottom: 120px;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800; /* Сделал пожирнее как в индексе */
+    text-decoration: none;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo span { color: var(--primary); }
+
+.btn-logout {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.btn-logout:hover {
+    color: var(--primary);
+}
+
+.user-badge {
+    color: var(--primary);
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* --- КОНЕЦ ШАПКИ --- */
+
+.project-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr 350px;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    height: calc(100vh - var(--nav-height) - 50px); /* Подправил расчет высоты */
+}
+
+.panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 1rem;
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+}
+
+.panel-body {
+    padding: 1.25rem;
+    overflow-y: auto;
+}
+
+/* Стили вьювера */
+.viewport-3d {
+    background: #000;
+    flex-grow: 1;
+    position: relative;
+    min-height: 400px;
+    border-radius: 8px; /* Чуть скруглил края */
+}
+
+.btn-secondary{
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #000;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover { background: var(--primary-hover); }
+
+/* AI Кнопка */
+.btn-ai {
+    background: linear-gradient(135deg, var(--accent), var(--primary));
+    color: white;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-ai:hover {
+    transform: translateY(-2px);
+}
+
+/* Формы */
+.form-group{ 
+    margin-bottom: 1rem; 
+}
+
+.form-group label{
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.6rem;
+    background: #0f172a;
+    border: 1px solid var(--border);
+    color: white;
+    border-radius: 6px;
+}
+
+footer{
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}

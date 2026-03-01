@@ -1,0 +1,106 @@
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.projects-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.projects-header h1 {
+    font-size: 2rem;
+    color: #fff;
+}
+
+/* Сетка карточек */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* Сама карточка */
+.project-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #4facfe;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #fff;
+    max-width: 70%;
+}
+
+/* Статусы */
+.status-badge {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.status-badge.ready { background: rgba(0, 255, 136, 0.1); color: #00ff88; }
+.status-badge.pending { background: rgba(255, 191, 0, 0.1); color: #ffbf00; }
+.status-badge.error { background: rgba(255, 71, 71, 0.1); color: #ff4747; }
+
+/* Данные внутри */
+.card-info {
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.card-info p {
+    margin: 8px 0;
+    color: #aaa;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-info strong {
+    color: #fff;
+}
+
+/* Кнопка */
+.btn-open {
+    display: block;
+    text-align: center;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: #000;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.btn-open:hover {
+    opacity: 0.9;
+}

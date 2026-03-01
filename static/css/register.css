@@ -1,0 +1,78 @@
+* {
+    box-sizing: border-box; 
+}
+
+.auth-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: calc(100vh - 70px);
+    max-width: 500px;
+    position: relative;
+    background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.15), transparent),
+                radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.15), transparent);
+    margin: 0;
+    padding: 20px;
+}
+
+.glass-card {
+    background: rgba(30, 41, 59, 0.6) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 24px !important;
+    padding: 2.5rem !important;
+    width: 100% !important;
+    max-width: 400px !important; /* Строго ограничиваем ширину */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: block !important;
+    margin: 0 auto !important; /* Центрируем саму карточку */
+}
+
+.glass-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #f8fafc;
+}
+
+.glass-card .form-group {
+    width: 100%;
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+/* Усиленные стили для инпутов */
+.glass-card input {
+    width: 100% !important; 
+    max-width: 100% !important;
+    display: block !important;
+    padding: 12px 16px !important;
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid #334155 !important;
+    color: white !important;
+    border-radius: 10px !important;
+    font-size: 1rem;
+    outline: none;
+}
+
+.btn-ai {
+    width: 100% !important;
+    padding: 14px !important;
+    background: linear-gradient(135deg, #8b5cf6, #38bdf8) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.auth-footer{
+    margin-top: 20px;
+}
+
+.auth-footer a{
+    color: #38bdf8;
+    text-decoration: none;
+}

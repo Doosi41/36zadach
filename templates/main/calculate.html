@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="post" id="calc-form" class="project-grid" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+<aside class="panel">
+    <div class="panel-header">Настройки производства</div>
+    <div class="panel-body">
+        
+        <details open>
+            <summary>📦 Материал и технология</summary>
+            <div class="form-group">
+                <label>Технология</label>
+                <select name="technology">
+                    <option value="FDM" {% if project.technology == 'FDM' %}selected{% endif %}>FDM (Послойная плавка)</option>
+                    <option value="SLA" {% if project.technology == 'SLA' %}selected{% endif %}>SLA (Фотополимер)</option>
+                    <option value="SLM" {% if project.technology == 'SLM' %}selected{% endif %}>SLM (Металл)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Плотность (г/см³)</label>
+                <input type="number" name="density" step="0.01" value="{{ project.density|default:1.25 }}">
+            </div>
+            <div class="form-group">
+                <label>Цена материала (за кг)</label>
+                <input type="number" name="price_per_kg" value="{{ project.material_cost_per_kg|default:2500 }}">
+            </div>
+        </details>
+
+        <details>
+            <summary>⏱ Временные затраты (ч)</summary>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Печать</label>
+                    <input type="number" name="print_time" step="0.1" value="{{ project.print_time }}">
+                </div>
+                <div class="form-group">
+                    <label>Пост-обр.</label>
+                    <input type="number" name="post_processing_time" step="0.1" value="{{ project.post_processing_time }}">
+                </div>
+            </div>
+        </details>
+
+        <details>
+            <summary>💰 Экономика и Налоги</summary>
+            <div class="form-group">
+                <label>Кол-во деталей</label>
+                <input type="number" name="quantity" value="{{ project.quantity|default:1 }}">
+            </div>
+            <div class="form-group">
+                <label>Наценка (коэфф.)</label>
+                <input type="number" name="markup" step="0.1" value="{{ project.markup_coefficient|default:2.5 }}">
+            </div>
+            <div class="form-group">
+                <label>Брак (%)</label>
+                <input type="number" name="defect" value="{{ project.defect_rate|default:5 }}">
+            </div>
+        </details>
+
+        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px;">
+            <i class="fa-solid fa-sync"></i> Пересчитать всё
+        </button>
+    </div>
+</aside>
+
+    <section class="panel">
+        <div class="panel-header">
+            Просмотр модели 
+            <span class="status-badge {{ project.status }}">{{ project.get_status_display }}</span>
+        </div>
+        <div class="viewport-3d" id="container-3d">
+            {% if project.model_file %}
+                <div style="text-align: center; padding-top: 40%;">Файл загружен: {{ project.model_file.name }}</div>
+            {% else %}
+                <div class="upload-zone">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <p>Загрузите STL модель</p>
+                    <input type="file" name="model_file" onchange="this.form.submit()">
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <aside class="panel">
+        <div class="panel-header">Расчет стоимости</div>
+        <div class="panel-body">
+            <div class="price-breakdown">
+                <p>Объем модели: <strong id="res-volume">{{ project.model_data.volume|default:"0" }}</strong> см³</p>
+                <p>Примерный вес: <strong id="res-weight">{{ project.model_data.weight|default:"0" }}</strong> г</p>
+                <p>Себестоимость: <strong id="res-cost">{{ project.model_data.cost|default:"0" }}</strong> руб</p>
+                
+                <p>Габариты (мм): 
+                    <small>
+                        {{ project.model_data.dimensions.x|default:"0" }} x 
+                        {{ project.model_data.dimensions.y|default:"0" }} x 
+                        {{ project.model_data.dimensions.z|default:"0" }}
+                    </small>
+                </p>
+
+                <hr style="border:0; border-top:1px solid var(--border); margin: 10px 0;">
+                <h2 style="color: var(--primary)">Итого: <span id="total-price">{{ project.total_price|default:"0" }}</span> руб</h2>
+            </div>
+            
+            <button type="button" class="btn-ai" id="ai-btn">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Сгенерировать КП (AI)
+            </button>
+            <div id="ai-response" style="margin-top: 15px; font-size: 0.9rem; color: #ccc;"></div>
+        </div>
+    </aside>
+</form>
+
+<script>
+    // Теперь объем берется из БД! Если файла нет, будет 0.
+    const volumeFromModel = parseFloat("{{ project.model_data.volume|default:0 }}".replace(',', '.'));
+
+    function calculate() {
+        const density = document.getElementById('density').value;
+        const priceKg = document.getElementById('price_per_kg').value;
+        const infill = document.getElementById('infill').value;
+
+        if (volumeFromModel > 0) {
+            const weight = (volumeFromModel * density * (infill / 100)).toFixed(2);
+            const cost = (weight * (priceKg / 1000)).toFixed(2);
+
+            document.getElementById('res-volume').innerText = volumeFromModel;
+            document.getElementById('res-weight').innerText = weight;
+            document.getElementById('res-cost').innerText = cost;
+            // Делаем ту же наценку x2.5, что и в Python для синхронности
+            document.getElementById('total-price').innerText = Math.round(cost * 2.5);
+        }
+    }
+
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', calculate);
+    });
+    
+    // Запускаем расчет сразу, чтобы подхватить данные из БД при загрузке
+    calculate();
+</script>
+
+{% endblock %}

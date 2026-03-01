@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}3D PRO{% endblock %}</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body> 
+    
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="{% url 'main' %}" class="logo">
+                    <i class="fa-solid fa-cube"></i>
+                    3D<span>PRO</span>
+                </a>
+                
+                <div class="nav-links">
+                    <a href="{% url 'main' %}" class='btn-logout'>Главная</a>
+                    <a href="{% url 'myprojects' %}" class='btn-logout'>Мои проекты</a>
+                    
+                    {% if user.is_authenticated %}
+                        <span class="user-badge">
+                            <i class="fa-regular fa-user"></i> {{ user.username }}
+                        </span>
+                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-logout">Выйти</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}">Войти</a>
+                        <a href="{% url 'register' %}" class="btn-primary">Регистрация</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="content-wrapper">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 3D Production Calculator. Powered by AI & Django.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    {% block scripts %}{% endblock %}
+
+</body> </html>

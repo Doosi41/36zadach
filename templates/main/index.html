@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="badge-ai">Next-Gen 3D Printing</div>
+        <h1>Рассчитай проект будущего с помощью <span class="gradient-text">AI</span></h1>
+        <p>Загрузи STL-модель, получи мгновенный расчет стоимости материалов и времени печати. Искусственный интеллект сам подготовит коммерческое предложение для вашего клиента.</p>
+        
+        <div class="hero-actions">
+            <a href="{% url 'calculate' %}" class="btn-ai-large">
+                <i class="fa-solid fa-rocket"></i> Начать расчет
+            </a>
+            {% comment %} <a href="#features" class="btn-outline">Сгенерировать КП</a> {% endcomment %}
+        </div>
+    </div>
+    
+    <div class="hero-features">
+        <div class="feat-card">
+            <i class="fa-solid fa-microchip"></i>
+            <h3>Точный AI расчет</h3>
+            <p>Анализ геометрии модели в реальном времени.</p>
+        </div>
+
+        <div class="feat-card">
+            <i class="fa-solid fa-file-pdf"></i>
+            <h3>Авто-КП</h3>
+            <p>Генерация документов одной кнопкой.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

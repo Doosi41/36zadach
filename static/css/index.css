@@ -113,11 +113,11 @@ body {
     letter-spacing: -1px;
 }
 
-/* Исправленный градиентный текст */
+
 .gradient-text {
-    background: linear-gradient(90deg, var(--primary), var(--accent));
-    -webkit-background-clip: text; /* Добавь это */
-    background-clip: text;         /* И это для поддержки всеми браузерами */
+    background: linear-gradient(90deg, var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -168,7 +168,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* Сетка карточек */
+
 .hero-features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -192,11 +192,11 @@ body {
 .feat-card i {
     font-size: 2.5rem;
     background: linear-gradient(135deg, var(--primary), var(--accent));
-    -webkit-background-clip: text; /* Добавь это */
-    background-clip: text;         /* И это */
+    -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 1.5rem;
-    display: inline-block; /* Важно для корректного отображения градиента на иконках */
+    display: inline-block;
 }
 
 .feat-card h3 {
@@ -208,7 +208,7 @@ body {
     color: var(--text-muted);
 }
 
-/* Footer */
+
 .footer {
     padding: 3rem;
     text-align: center;

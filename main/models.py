@@ -15,11 +15,10 @@ class Project(models.Model):
     technology = models.CharField(max_length=50, default='FDM')
     material_density = models.FloatField(default=1.25)
     material_cost_per_kg = models.FloatField(default=2000)
-    
     fill_percentage = models.IntegerField(default=20)
     print_time_hours = models.FloatField(default=0)
     
-    # Результаты расчетов (храним, чтобы не пересчитывать каждый раз)
+    # Результаты расчетов
     total_weight = models.FloatField(default=0)
     total_price = models.IntegerField(default=0)
     final_price = models.FloatField(default=0)
@@ -62,6 +61,9 @@ class Project(models.Model):
     # Интерфейс
     currency = models.CharField(max_length=10, default='RUB')
     language = models.CharField(max_length=10, default='RU')
+    
+    ai_description = models.TextField(blank=True, null=True, verbose_name="Описание от ИИ")
+    ai_commercial_text = models.TextField(blank=True, null=True, verbose_name="Коммерческое предложение")
 
     status = models.CharField(
         max_length=20, 

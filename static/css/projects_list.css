@@ -16,14 +16,14 @@
     color: #fff;
 }
 
-/* Сетка карточек */
+
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 25px;
 }
 
-/* Сама карточка */
+
 .project-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -57,7 +57,6 @@
     max-width: 70%;
 }
 
-/* Статусы */
 .status-badge {
     font-size: 0.7rem;
     padding: 4px 10px;
@@ -66,11 +65,21 @@
     font-weight: 700;
 }
 
-.status-badge.ready { background: rgba(0, 255, 136, 0.1); color: #00ff88; }
-.status-badge.pending { background: rgba(255, 191, 0, 0.1); color: #ffbf00; }
-.status-badge.error { background: rgba(255, 71, 71, 0.1); color: #ff4747; }
+.status-badge.ready {
+    background: rgba(0, 255, 136, 0.1); 
+    color: #00ff88; 
+}
 
-/* Данные внутри */
+.status-badge.pending { 
+    background: rgba(255, 191, 0, 0.1); 
+    color: #ffbf00; 
+}
+
+.status-badge.error { 
+    background: rgba(255, 71, 71, 0.1); 
+    color: #ff4747; 
+}
+
 .card-info {
     margin-bottom: 20px;
     flex-grow: 1;
@@ -88,7 +97,6 @@
     color: #fff;
 }
 
-/* Кнопка */
 .btn-open {
     display: block;
     text-align: center;

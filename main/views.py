@@ -1,15 +1,17 @@
+import json
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from google import genai
+from google.genai import types
+import stl
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Project
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as auth_login
-import stl
-import numpy as np
+
+from .models import Project
 
 def main_page(request):
     return render(request, 'main/index.html')
-
-
-# views.py
 
 @login_required
 def calculate(request, project_id=None):
@@ -20,7 +22,6 @@ def calculate(request, project_id=None):
     if request.method == 'POST':
         title = request.POST.get('title', 'Новый проект')
         model_file = request.FILES.get('model_file')
-        
         density = request.POST.get('density', 1.25)
         price_per_kg = request.POST.get('price_per_kg', 2500)
         infill = request.POST.get('infill', 20)
@@ -35,11 +36,8 @@ def calculate(request, project_id=None):
             try:
                 mesh = stl.mesh.Mesh.from_file(project.model_file.path)
                 volume, _, _ = mesh.get_mass_properties()
-                
-                # ИСПОЛЬЗУЕМ float() чтобы превратить numpy.float в обычный float
                 volume_cm3 = float(max(0, volume / 1000.0))
 
-                # Приводим координаты к обычному float
                 dims = {
                     'x': float(round(mesh.x.max() - mesh.x.min(), 2)),
                     'y': float(round(mesh.y.max() - mesh.y.min(), 2)),
@@ -49,7 +47,7 @@ def calculate(request, project_id=None):
                 project.model_data = {
                     'volume': round(volume_cm3, 2),
                     'dimensions': dims,
-                    'polygons': int(len(mesh.vectors)) # Приводим к int
+                    'polygons': int(len(mesh.vectors))
                 }
                 project.status = 'ready'
             except Exception as e:
@@ -60,8 +58,6 @@ def calculate(request, project_id=None):
             results = calculate_project_costs(project, density, price_per_kg, infill)
             if results:
                 project.total_price = int(results['total'])
-                
-                # Снова следим, чтобы в JSON уходили только стандартные типы
                 project.model_data.update({
                     'weight': float(results['weight']),
                     'cost': float(results['cost'])
@@ -73,54 +69,86 @@ def calculate(request, project_id=None):
 
     return render(request, 'main/calculate.html', {'project': project})
 
-
-def register(request):
-    return render(request, 'main/register.html')
-
-
-def login(request):
-    if request.method == 'POST':
-        # Забираем данные из формы
-        u = request.POST.get('username')
-        p = request.POST.get('password')
-        
-        # Проверяем пользователя
-        user = authenticate(request, username=u, password=p)
-        
-        if user is not None:
-            auth_login(request, user) # Входим в аккаунт
-            return redirect('myprojects') # Отправляем к проектам
-        else:
-            # Если данные неверны
-            return render(request, 'main/login.html', {'error': 'Неверный логин или пароль'})
-            
-    return render(request, 'main/login.html')
-
-
-def projects_list(request):
-    # Получаем проекты только текущего пользователя (согласно ТЗ)
-    if request.user.is_authenticated:
-        projects = Project.objects.filter(user=request.user)
-    else:
-        projects = []
-    return render(request, 'main/projects_list.html', {'projects': projects})
-
 def calculate_project_costs(project, density, price_per_kg, infill):
-    """
-    Функция берет сохраненный объем из model_data и считает итоговые показатели.
-    """
     volume_cm3 = project.model_data.get('volume', 0)
-    
     if volume_cm3 > 0:
         weight_g = volume_cm3 * float(density) * (int(infill) / 100)
-        
         cost_rub = (weight_g / 1000) * float(price_per_kg)
-        
         total_price = round(cost_rub * 2.5) 
-        
         return {
             'weight': round(weight_g, 2),
             'cost': round(cost_rub, 2),
             'total': total_price
         }
     return None
+
+def generate_ai_text(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    
+    API_KEY = 'AIzaSyAT7pZQwnqsXKdYr4F1rbnDMdFkTRJUFXA'
+    
+    try:
+        client = genai.Client(api_key=API_KEY)
+
+        dim = project.model_data.get('dimensions', {'x': 0, 'y': 0, 'z': 0})
+        
+        prompt = f"""
+        Ты эксперт в 3D печати. Напиши коммерческое предложение для детали:
+        Название: {project.title}
+        Габариты: {dim.get('x')} x {dim.get('y')} x {dim.get('z')} мм
+        Технология: {project.technology or 'FDM'}
+        
+        Ответь СТРОГО в формате JSON:
+        {{
+            "description": "краткое описание",
+            "commercial": "текст предложения"
+        }}
+        """
+
+        # Вызываем генерацию
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json"
+            )
+        )
+        
+        ai_result = response.parsed if hasattr(response, 'parsed') else json.loads(response.text)
+
+        # Сохранение в базу
+        if not project.model_data:
+            project.model_data = {}
+        
+        project.model_data['ai_description'] = ai_result.get('description')
+        project.model_data['ai_commercial'] = ai_result.get('commercial')
+        project.save()
+
+        return JsonResponse({'status': 'success', 'data': ai_result})
+
+    except Exception as e:
+        print(f"--- ОШИБКА AI --- \n{str(e)}")
+        return JsonResponse({
+            'status': 'error', 
+            'message': f"Ошибка API: {str(e)}"
+        }, status=500)
+        
+        
+
+def register(request):
+    return render(request, 'main/register.html')
+
+def login(request):
+    if request.method == 'POST':
+        u = request.POST.get('username')
+        p = request.POST.get('password')
+        user = authenticate(request, username=u, password=p)
+        if user is not None:
+            auth_login(request, user)
+            return redirect('myprojects')
+        return render(request, 'main/login.html', {'error': 'Неверный логин или пароль'})
+    return render(request, 'main/login.html')
+
+def projects_list(request):
+    projects = Project.objects.filter(user=request.user) if request.user.is_authenticated else []
+    return render(request, 'main/projects_list.html', {'projects': projects})

@@ -1,78 +1,116 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+
+<style>
+        .ai-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px dashed var(--primary);
+            display: none; 
+        }
+        .ai-label {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .loading-spinner {
+            display: none;
+            margin-left: 10px;
+        }
+        .btn-ai {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-ai:hover { opacity: 0.9; }
+        .btn-ai:disabled { opacity: 0.6; cursor: not-allowed; }
+</style>
 
 <form method="post" id="calc-form" class="project-grid" enctype="multipart/form-data">
     {% csrf_token %}
     
-<aside class="panel">
-    <div class="panel-header">Настройки производства</div>
-    <div class="panel-body">
-        
-        <details open>
-            <summary>📦 Материал и технология</summary>
-            <div class="form-group">
-                <label>Технология</label>
-                <select name="technology">
-                    <option value="FDM" {% if project.technology == 'FDM' %}selected{% endif %}>FDM (Послойная плавка)</option>
-                    <option value="SLA" {% if project.technology == 'SLA' %}selected{% endif %}>SLA (Фотополимер)</option>
-                    <option value="SLM" {% if project.technology == 'SLM' %}selected{% endif %}>SLM (Металл)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Плотность (г/см³)</label>
-                <input type="number" name="density" step="0.01" value="{{ project.density|default:1.25 }}">
-            </div>
-            <div class="form-group">
-                <label>Цена материала (за кг)</label>
-                <input type="number" name="price_per_kg" value="{{ project.material_cost_per_kg|default:2500 }}">
-            </div>
-        </details>
+    <aside class="panel">
 
-        <details>
-            <summary>⏱ Временные затраты (ч)</summary>
-            <div class="form-row">
+        <div class="panel-header">Настройки производства</div>
+
+        <div class="panel-body">
+
+            <details open>
+
+                <summary>📦 Материал и технология</summary>
+
                 <div class="form-group">
-                    <label>Печать</label>
-                    <input type="number" name="print_time" step="0.1" value="{{ project.print_time }}">
+
+                    <label>Технология</label>
+
+                    <select name="technology" id="technology">
+
+                        <option value="FDM" {% if project.technology == 'FDM' %}selected{% endif %}>FDM (Послойная плавка)</option>
+                        <option value="SLA" {% if project.technology == 'SLA' %}selected{% endif %}>SLA (Фотополимер)</option>
+                        <option value="SLM" {% if project.technology == 'SLM' %}selected{% endif %}>SLM (Металл)</option>
+
+                    </select>
+
                 </div>
+
                 <div class="form-group">
-                    <label>Пост-обр.</label>
-                    <input type="number" name="post_processing_time" step="0.1" value="{{ project.post_processing_time }}">
+                    <label>Плотность (г/см³)</label>
+                    <input type="number" name="density" id="density" step="0.01" value="{{ project.density|default:1.25 }}">
                 </div>
-            </div>
-        </details>
 
-        <details>
-            <summary>💰 Экономика и Налоги</summary>
-            <div class="form-group">
-                <label>Кол-во деталей</label>
-                <input type="number" name="quantity" value="{{ project.quantity|default:1 }}">
-            </div>
-            <div class="form-group">
-                <label>Наценка (коэфф.)</label>
-                <input type="number" name="markup" step="0.1" value="{{ project.markup_coefficient|default:2.5 }}">
-            </div>
-            <div class="form-group">
-                <label>Брак (%)</label>
-                <input type="number" name="defect" value="{{ project.defect_rate|default:5 }}">
-            </div>
-        </details>
+                <div class="form-group">
+                    <label>Цена материала (за кг)</label>
+                    <input type="number" name="price_per_kg" id="price_per_kg" value="{{ project.material_cost_per_kg|default:2500 }}">
+                </div>
 
-        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px;">
-            <i class="fa-solid fa-sync"></i> Пересчитать всё
-        </button>
-    </div>
-</aside>
+            </details>
+
+            <details>
+
+                <summary>💰 Экономика</summary>
+                <div class="form-group">
+                    <label>Наценка (коэфф.)</label>
+                    <input type="number" name="markup" id="markup" step="0.1" value="{{ project.markup_coefficient|default:2.5 }}">
+                </div>
+
+            </details>
+
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px;">
+                <i class="fa-solid fa-sync"></i> Сохранить и пересчитать
+            </button>
+
+        </div>
+
+    </aside>
 
     <section class="panel">
+
         <div class="panel-header">
             Просмотр модели 
             <span class="status-badge {{ project.status }}">{{ project.get_status_display }}</span>
         </div>
+
         <div class="viewport-3d" id="container-3d">
+
             {% if project.model_file %}
-                <div style="text-align: center; padding-top: 40%;">Файл загружен: {{ project.model_file.name }}</div>
+                <div id="model-container" style="width: 100%; height: 500px;"></div>
             {% else %}
                 <div class="upload-zone">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -80,13 +118,19 @@
                     <input type="file" name="model_file" onchange="this.form.submit()">
                 </div>
             {% endif %}
+
         </div>
+
     </section>
 
     <aside class="panel">
+
         <div class="panel-header">Расчет стоимости</div>
+
         <div class="panel-body">
+
             <div class="price-breakdown">
+
                 <p>Объем модели: <strong id="res-volume">{{ project.model_data.volume|default:"0" }}</strong> см³</p>
                 <p>Примерный вес: <strong id="res-weight">{{ project.model_data.weight|default:"0" }}</strong> г</p>
                 <p>Себестоимость: <strong id="res-cost">{{ project.model_data.cost|default:"0" }}</strong> руб</p>
@@ -101,43 +145,114 @@
 
                 <hr style="border:0; border-top:1px solid var(--border); margin: 10px 0;">
                 <h2 style="color: var(--primary)">Итого: <span id="total-price">{{ project.total_price|default:"0" }}</span> руб</h2>
+
             </div>
             
-            <button type="button" class="btn-ai" id="ai-btn">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Сгенерировать КП (AI)
-            </button>
-            <div id="ai-response" style="margin-top: 15px; font-size: 0.9rem; color: #ccc;"></div>
+            {% if project.id %}
+            
+                <button type="button" class="btn-ai" id="ai-btn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 
+                    <span id="ai-btn-text">Сгенерировать КП (AI)</span>
+                    <i class="fa-solid fa-circle-notch fa-spin loading-spinner" id="ai-loader"></i>
+                </button>
+                
+                <div id="ai-result-block" class="ai-container" {% if project.model_data.ai_description %}style="display:block;"{% endif %}>
+
+                    <span class="ai-label">Описание детали:</span>
+                    <div id="ai-desc" style="margin-bottom: 15px; color: white;">{{ project.model_data.ai_description|default:"" }}</div>
+                    
+                    <span class="ai-label">Коммерческий текст:</span>
+                    <div id="ai-comm" style="color: white;">{{ project.model_data.ai_commercial|default:"" }}</div>
+                </div>
+
+            {% else %}
+                <div class="info-badge" style="background: rgba(255,165,0,0.1); color: orange; padding: 10px; border-radius: 5px; font-size: 0.8rem; margin-top: 15px;">
+                    <i class="fa-solid fa-circle-info"></i> Загрузите файл, чтобы активировать расчет и AI.
+                </div>
+            {% endif %}
+
         </div>
+        
     </aside>
+
 </form>
 
+{% if project.model_file %}
+
+<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/"
+    }
+  }
+</script>
+
+<script type="module">
+    import { init3DViewer } from "{% static 'js/viewer.js' %}";
+    init3DViewer('model-container', '{{ project.model_file.url }}');
+</script>
+
+{% endif %}
+
 <script>
-    // Теперь объем берется из БД! Если файла нет, будет 0.
-    const volumeFromModel = parseFloat("{{ project.model_data.volume|default:0 }}".replace(',', '.'));
+    // 1. Логика пересчета
+    const rawVolume = "{{ project.model_data.volume|default:0 }}".replace(',', '.');
+    const volumeFromModel = parseFloat(rawVolume) || 0;
 
     function calculate() {
-        const density = document.getElementById('density').value;
-        const priceKg = document.getElementById('price_per_kg').value;
-        const infill = document.getElementById('infill').value;
+        const density = parseFloat(document.getElementById('density').value) || 0;
+        const priceKg = parseFloat(document.getElementById('price_per_kg').value) || 0;
+        const markup = parseFloat(document.getElementById('markup').value) || 1;
 
         if (volumeFromModel > 0) {
-            const weight = (volumeFromModel * density * (infill / 100)).toFixed(2);
+            const weight = (volumeFromModel * density).toFixed(2);
             const cost = (weight * (priceKg / 1000)).toFixed(2);
+            const total = Math.round(cost * markup);
 
-            document.getElementById('res-volume').innerText = volumeFromModel;
             document.getElementById('res-weight').innerText = weight;
             document.getElementById('res-cost').innerText = cost;
-            // Делаем ту же наценку x2.5, что и в Python для синхронности
-            document.getElementById('total-price').innerText = Math.round(cost * 2.5);
+            document.getElementById('total-price').innerText = total;
         }
     }
 
-    document.querySelectorAll('input').forEach(input => {
-        input.addEventListener('input', calculate);
+    document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', calculate);
     });
-    
-    // Запускаем расчет сразу, чтобы подхватить данные из БД при загрузке
-    calculate();
+
+    // 2. Логика AI 
+    {% if project.id %}
+    const aiBtn = document.getElementById('ai-btn');
+    aiBtn.addEventListener('click', async function() {
+        const loader = document.getElementById('ai-loader');
+        const btnText = document.getElementById('ai-btn-text');
+        const resultBlock = document.getElementById('ai-result-block');
+
+        this.disabled = true;
+        loader.style.display = 'inline-block';
+        btnText.innerText = 'Нейронка думает...';
+
+        try {
+            const response = await fetch("{% url 'generate_ai_text' project.id %}");
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                document.getElementById('ai-desc').innerText = result.data.description;
+                document.getElementById('ai-comm').innerText = result.data.commercial;
+                resultBlock.style.display = 'block';
+                btnText.innerText = 'Обновить описание (AI)';
+            } else {
+                alert("Ошибка: " + result.message);
+            }
+        } catch (e) {
+            alert("Ошибка связи с сервером");
+        } finally {
+            this.disabled = false;
+            loader.style.display = 'none';
+        }
+    });
+    {% endif %}
 </script>
 
 {% endblock %}

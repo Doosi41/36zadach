@@ -1,17 +1,19 @@
-<a href="#how"><img src="assets/banner.svg" alt="3D PRO — калькулятор 3D-печати с ИИ. Загрузил STL. Получил цену. Отправил КП." width="100%"></a>
+<p align="center"><b>English</b> &nbsp;|&nbsp; <a href="README.ru.md">Русский</a></p>
+
+<a href="#how"><img src="assets/en/banner.svg" alt="3D PRO — a 3D printing calculator with AI. Upload an STL. Get a price. Send an offer." width="100%"></a>
 
 <p align="center">
-  <a href="#screens">В деле&nbsp;›</a>&emsp;
-  <a href="#features">Возможности&nbsp;›</a>&emsp;
-  <a href="#how">Как считается&nbsp;›</a>&emsp;
-  <a href="#ai">КП&nbsp;›</a>&emsp;
-  <a href="#run">Запуск&nbsp;›</a>&emsp;
-  <a href="#structure">Структура&nbsp;›</a>
+  <a href="#screens">In action&nbsp;›</a>&emsp;
+  <a href="#features">Features&nbsp;›</a>&emsp;
+  <a href="#how">How it counts&nbsp;›</a>&emsp;
+  <a href="#ai">Offer&nbsp;›</a>&emsp;
+  <a href="#run">Run&nbsp;›</a>&emsp;
+  <a href="#structure">Structure&nbsp;›</a>
 </p>
 
 <br>
 
-<img src="assets/stats.svg" alt="Один STL-файл, чтобы получить цену. Три технологии: FDM, SLA, SLM. Django 6 и Python 3.12. ИИ пишет описание и коммерческое предложение." width="100%">
+<img src="assets/en/stats.svg" alt="One STL file to get a price. Three technologies: FDM, SLA, SLM. Django 6 and Python 3.12. AI writes the description and the sales offer." width="100%">
 
 <br>
 <br>
@@ -24,84 +26,84 @@
 <br>
 
 <a name="screens"></a>
-<img src="assets/titles/screens.svg" alt="В деле" width="100%">
+<img src="assets/en/titles/screens.svg" alt="In action" width="100%">
 
-<img src="assets/screen-home.png" alt="Главная страница 3D PRO" width="100%">
+<img src="assets/screen-home.png" alt="3D PRO home page" width="100%">
 
-<img src="assets/calc.svg" alt="Пример расчёта: шестерня Z20, 59.8 × 59.8 × 10 мм, 640 полигонов, объём 23.47 см³, вес 5.87 г, себестоимость 14.67 ₽, итого 37 ₽" width="100%">
+<img src="assets/en/calc.svg" alt="Example: gear Z20, 59.8 × 59.8 × 10 mm, 640 polygons, volume 23.47 cm³, weight 5.87 g, cost 14.67 ₽, total 37 ₽" width="100%">
 
 <br>
 <br>
 
 <a name="features"></a>
-<img src="assets/titles/features.svg" alt="Возможности" width="100%">
+<img src="assets/en/titles/features.svg" alt="Features" width="100%">
 
-<a href="main/views.py"><img src="assets/rows/stl.svg" alt="Разбор STL — numpy-stl считает объём, габариты и число полигонов модели" width="100%"></a>
-<a href="main/views.py"><img src="assets/rows/price.svg" alt="Расчёт стоимости — вес по плотности и заполнению, себестоимость и цена с наценкой" width="100%"></a>
-<a href="templates/main/calculate.html"><img src="assets/rows/tech.svg" alt="Технологии — FDM, SLA и SLM" width="100%"></a>
-<a href="main/views.py"><img src="assets/rows/ai.svg" alt="КП от ИИ — Gemini пишет описание детали и коммерческое предложение" width="100%"></a>
-<a href="templates/main/projects_list.html"><img src="assets/rows/projects.svg" alt="Мои проекты — все расчёты хранятся в аккаунте" width="100%"></a>
-<a href="main/models.py"><img src="assets/rows/model.svg" alt="Модель проекта — параметры производства: наценка, брак, налог, энергия" width="100%"></a>
+<a href="main/views.py"><img src="assets/en/rows/stl.svg" alt="Reading STL — numpy-stl counts the volume, size and number of polygons" width="100%"></a>
+<a href="main/views.py"><img src="assets/en/rows/price.svg" alt="Price calculation — weight from density and infill, cost and price with markup" width="100%"></a>
+<a href="templates/main/calculate.html"><img src="assets/en/rows/tech.svg" alt="Technologies — FDM, SLA and SLM" width="100%"></a>
+<a href="main/views.py"><img src="assets/en/rows/ai.svg" alt="AI offer — Gemini writes a part description and a sales offer" width="100%"></a>
+<a href="templates/main/projects_list.html"><img src="assets/en/rows/projects.svg" alt="My projects — all calculations are saved in your account" width="100%"></a>
+<a href="main/models.py"><img src="assets/en/rows/model.svg" alt="Project model — production settings: markup, defects, tax, energy" width="100%"></a>
 
 <br>
 <br>
 
 <a name="how"></a>
-<img src="assets/titles/how.svg" alt="Как считается" width="100%">
+<img src="assets/en/titles/how.svg" alt="How it counts" width="100%">
 
-<img src="assets/flow.svg" alt="Расчёт: загрузка STL, объём и габариты, вес по плотности и заполнению, цена с наценкой 2.5" width="100%">
+<img src="assets/en/flow.svg" alt="Calculation: upload an STL, get volume and size, weight from density and infill, price with markup 2.5" width="100%">
 
 <br>
 <br>
 
 <a name="ai"></a>
-<img src="assets/titles/ai.svg" alt="Коммерческое предложение" width="100%">
+<img src="assets/en/titles/ai.svg" alt="Sales offer" width="100%">
 
-<img src="assets/ai.svg" alt="В Gemini уходят название, габариты и технология, в ответ приходит JSON с описанием детали и коммерческим предложением" width="100%">
+<img src="assets/en/ai.svg" alt="The name, size and technology go to Gemini. It sends back JSON with a part description and a sales offer" width="100%">
 
 <br>
 <br>
 
 <a name="run"></a>
-<img src="assets/titles/run.svg" alt="Запуск" width="100%">
+<img src="assets/en/titles/run.svg" alt="Run" width="100%">
 
-<img src="assets/run.svg" alt="Запуск: виртуальное окружение, зависимости, .env из шаблона, migrate, runserver" width="100%">
+<img src="assets/en/run.svg" alt="Run: virtual environment, packages, .env from the template, migrate, runserver" width="100%">
 
 <details>
-<summary>Скопировать команды</summary>
+<summary>Copy the commands</summary>
 <br>
 
 ```bash
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env        # впиши GEMINI_API_KEY
+cp .env.example .env        # add your GEMINI_API_KEY
 python manage.py migrate
 python manage.py runserver  # http://127.0.0.1:8000
-python manage.py test       # 19 тестов
+python manage.py test       # 19 tests
 ```
 
 </details>
 
 <br>
 
-<img src="assets/titles/env.svg" alt="Настройки" width="100%">
+<img src="assets/en/titles/env.svg" alt="Settings" width="100%">
 
-<a href=".env.example"><img src="assets/env.svg" alt="Переменные окружения: GEMINI_API_KEY, GEMINI_MODEL, DJANGO_SECRET_KEY, DJANGO_DEBUG, DJANGO_ALLOWED_HOSTS" width="100%"></a>
+<a href=".env.example"><img src="assets/en/env.svg" alt="Environment variables: GEMINI_API_KEY, GEMINI_MODEL, DJANGO_SECRET_KEY, DJANGO_DEBUG, DJANGO_ALLOWED_HOSTS" width="100%"></a>
 
 <br>
 <br>
 
 <a name="structure"></a>
-<img src="assets/titles/structure.svg" alt="Структура" width="100%">
+<img src="assets/en/titles/structure.svg" alt="Structure" width="100%">
 
-<img src="assets/structure.svg" alt="Структура репозитория" width="100%">
+<img src="assets/en/structure.svg" alt="Repository structure" width="100%">
 
 <br>
 <br>
 
-<img src="assets/titles/roadmap.svg" alt="Roadmap" width="100%">
+<img src="assets/en/titles/roadmap.svg" alt="Roadmap" width="100%">
 
-<img src="assets/roadmap.svg" alt="Roadmap: готово 6 из 9" width="100%">
+<img src="assets/en/roadmap.svg" alt="Roadmap: 6 of 9 done" width="100%">
 
 <br>
 <br>
@@ -109,5 +111,5 @@ python manage.py test       # 19 тестов
 <img src="assets/footer.svg" alt="Stay hungry. Stay foolish. — Steve Jobs, 1955–2011" width="100%">
 
 <p align="center">
-  <sub>Сделано с ☕ и Django &nbsp;·&nbsp; <a href="https://github.com/a1tvv">@a1tvv</a></sub>
+  <sub>Made with ☕ and Django &nbsp;·&nbsp; <a href="https://github.com/a1tvv">@a1tvv</a></sub>
 </p>

@@ -1,4 +1,4 @@
-from django.db import migrations, models
+from django.db import models
 from django.contrib.auth.models import User
 
 class Project(models.Model):
@@ -12,7 +12,6 @@ class Project(models.Model):
     
     # Весь сок здесь
     
-    technology = models.CharField(max_length=50, default='FDM')
     material_density = models.FloatField(default=1.25)
     material_cost_per_kg = models.FloatField(default=2000)
     fill_percentage = models.IntegerField(default=20)
@@ -22,18 +21,14 @@ class Project(models.Model):
     total_weight = models.FloatField(default=0)
     total_price = models.IntegerField(default=0)
     final_price = models.FloatField(default=0)
-    ai_description = models.TextField(blank=True, null=True)
     
 
     model_file = models.FileField(upload_to='models/%Y/%m/%d/', blank=True, null=True)
-    
-    model_data = models.JSONField(default=dict, blank=True)
     
     parameters = models.JSONField(default=dict, blank=True)
     
     # Тут храним объем, габариты и полигоны
     model_data = models.JSONField(default=dict, blank=True)
-    status = models.CharField(max_length=20, default='pending')
     
     # Подсчет стоимости
     density = models.FloatField(default=1.25)

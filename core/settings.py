@@ -13,20 +13,28 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_m+a&^*5@14u$ck65fzi!i45l39_&=5oehu7&@h=abz@d(-du&'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: keep the secret key used in production secret!
+# Без DEBUG ключ обязателен: пустой SECRET_KEY Django не запустит.
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY') or ('django-insecure-dev-only' if DEBUG else '')
+
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',') if h.strip()]
+
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-3.5-flash')
 
 
 # Application definition
@@ -128,6 +136,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # После выхода отправляем пользователя на главную страницу
 LOGOUT_REDIRECT_URL = 'main' 
 # А после входа — на список проектов
-LOGIN_REDIRECT_URL = 'myprojects'
+LOGIN_REDIRECT_URL = 'projects'
 
 LOGIN_URL = 'login'

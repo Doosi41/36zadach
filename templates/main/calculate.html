@@ -200,6 +200,7 @@
     // 1. Логика пересчета
     const rawVolume = "{{ project.model_data.volume|default:0 }}".replace(',', '.');
     const volumeFromModel = parseFloat(rawVolume) || 0;
+    const infill = {{ project.infill|default:20 }} / 100;  // как в calculate_project_costs на сервере
 
     function calculate() {
         const density = parseFloat(document.getElementById('density').value) || 0;
@@ -207,7 +208,7 @@
         const markup = parseFloat(document.getElementById('markup').value) || 1;
 
         if (volumeFromModel > 0) {
-            const weight = (volumeFromModel * density).toFixed(2);
+            const weight = (volumeFromModel * density * infill).toFixed(2);
             const cost = (weight * (priceKg / 1000)).toFixed(2);
             const total = Math.round(cost * markup);
 
@@ -234,7 +235,10 @@
         btnText.innerText = 'Нейронка думает...';
 
         try {
-            const response = await fetch("{% url 'generate_ai_text' project.id %}");
+            const response = await fetch("{% url 'generate_ai_text' project.id %}", {
+                method: 'POST',
+                headers: {'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value},
+            });
             const result = await response.json();
 
             if (result.status === 'success') {

@@ -12,6 +12,7 @@
         
         <form method="post" class="auth-form">
             {% csrf_token %}
+            {% if error %}<p style="color: #ff6b6b; margin-bottom: 15px;">{{ error }}</p>{% endif %}
             <div class="form-group">
                 <label>Имя пользователя</label>
                 <input type="text" name="username" placeholder="username" required>

@@ -108,7 +108,7 @@ python manage.py test       # 19 тестов
 <br>
 <br>
 
-<img src="assets/footer.svg" alt="Stay hungry. Stay foolish. — Steve Jobs, 1955–2011" width="100%">
+<img src="assets/footer.svg" alt="Talk is cheap. Show me the code. — Linus Torvalds" width="100%">
 
 <p align="center">
   <sub>Сделано с ☕ и Django &nbsp;·&nbsp; <a href="https://github.com/a1tvv">@a1tvv</a></sub>
